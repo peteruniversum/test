@@ -110,7 +110,7 @@
     {trigger}
     {trigger:pagerejected|approval=Freigabe Pressestelle|partial=true}
         {send-email:user=@creator@,@Bearbeiter@|subject=ÜBERARBEITEN: PM @pagetitle@}
-        Die Pressestelle hat PM @pagetitle@ abgelehnt. Bitte beachten Sie ggf. den Ablehnnungskommentar: "@approvalcomment@". Überarbeiten Sie ggf. hier: @page@. Details zum Workflow können hier eingesehen werden: @pageactivity@
+        Die Pressestelle hat PM @pagetitle@ widerrufen. Bitte beachten Sie ggf. den Ablehnnungskommentar: "@approvalcomment@". Überarbeiten Sie ggf. hier: @page@. Details zum Workflow können hier eingesehen werden: @pageactivity@
         {send-email}
     {trigger}
     {trigger:pagerejected|approval=Freigabe MdL|partial=true}
