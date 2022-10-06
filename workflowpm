@@ -1,0 +1,126 @@
+{workflow:name=Freigabe Pressemitteilungen|key=globaltemplate--1416453280|label=pressemitteilung|adminusers=vkoppenleitner,pbaumgaertner,ljehne,lmuenstermann,nwilkins|content=pages|updatestatus=true}
+    {description}
+        Freigabeprozess für Pressemitteilungen
+    {description}
+    {state:Entwurf Referent|submit=Prüfung Pressestelle}
+    {state}
+    {state:Prüfung Pressestelle|approved=Prüfung MdL|rejected=Entwurf Referent}
+        {approval:Freigabe Pressestelle|group=&intern_freigabepm}
+    {state}
+    {state:Prüfung MdL|approved=Freigegeben|rejected=Entwurf Referent|colour=#ffab00}
+        {approval:Prüfung MdL|assignable=true|user=nwilkins,@MdL@}
+    {state}
+    {state:Freigegeben|approved=Veröffentlicht|hideselection=true|colour=#00b8d9}
+        {approval:Veröffentlicht|group=&intern_freigabepm}
+    {state}
+    {state:Veröffentlicht|final=true}
+    {state}
+    {state:Verworfen|hideselection=true|hidefrompath=true|colour=#ff0000}
+        {state-selection:states=Entwurf Referent}
+    {state}
+    {trigger:pagestatechanged|state=Freigegeben}
+        {add-restriction:type=view|group=confluence-users}
+    {trigger}
+    {trigger:labeladded|label=verworfen}
+        {set-state:Verworfen}
+    {trigger}
+    {trigger:pageapproved|approval=Freigabe Pressestelle|partial=true}
+        {set-state:Prüfung MdL}
+    {trigger}
+    {trigger:pagerejected|approval=Freigabe Pressestelle|partial=true}
+        {set-state:Entwurf Referent}
+    {trigger}
+    {trigger:pageapproved|approval=Freigabe MdL|partial=true}
+        {set-state:Freigegeben}
+    {trigger}
+    {trigger:pagerejected|approval=Freigabe MdL|partial=true}
+        {set-state:Prüfung Pressestelle}
+    {trigger}
+    {trigger:pageapproved|approval=Veröffentlicht|partial=true}
+        {set-state:Veröffentlicht}
+    {trigger}
+    {trigger:pagerejected|approval=Veröffentlicht|partial=true}
+        {set-state:Prüfung Pressestelle}
+    {trigger}
+    {trigger:statechanged|state=Prüfung Pressestelle}
+        {add-comment}
+        <p>Hallo </p>
+         
+        <p>
+        <ac:link>
+        <ri:user ri:userkey="8a9ed00181d1741701831da4e5d30005"/>
+        </ac:link> <ac:link>
+        <ri:user ri:userkey="8a9ed0016a27eb79016a2aab1ef50000"/>
+        </ac:link>
+        <span style="letter-spacing: 0.0px;"> </span>
+        <ac:link>
+        <ri:user ri:userkey="8a9ed0016a27eb79016a2aabe2040001"/>
+        <ac:plain-text-link-body><![CDATA[Susanne Klömpges]]></ac:plain-text-link-body>
+        </ac:link>
+        <span style="letter-spacing: 0.0px;"> </span>
+        <ac:link>
+        <ri:user ri:userkey="8a9ed0017730303a017989115159000b"/>
+        </ac:link>
+        </p>
+         
+         
+        <p>Hier wartet eine neue PM auf Bearbeitung und Freigabe. Der letzte Freigabekommentar lautet: "@approvalcomment@"</p>
+        {add-comment}
+    {trigger}
+    {trigger:statechanged|state=Freigegeben}
+        {add-comment}
+        <p>Hallo</p>
+         
+        <p>
+        <ac:link>
+        <ri:user ri:userkey="8a9ed00181d1741701831da4e5d30005"/>
+        </ac:link> <ac:link>
+        <ri:user ri:userkey="8a9ed0016a27eb79016a2aab1ef50000"/>
+        </ac:link>
+        <span style="letter-spacing: 0.0px;"> </span>
+        <ac:link>
+        <ri:user ri:userkey="8a9ed0016a27eb79016a2aabe2040001"/>
+        <ac:plain-text-link-body><![CDATA[Susanne Klömpges]]></ac:plain-text-link-body>
+        </ac:link>
+        <span style="letter-spacing: 0.0px;"> </span>
+        <ac:link>
+        <ri:user ri:userkey="8a9ed0017730303a017989115159000b"/>
+        </ac:link>
+        </p>
+         
+         
+        </p>
+        <p>diese PM ist freigegeben und sollte bitte zeitnah/ zum geplanten Zeitpunkt versendet werden. Freigabekommentar: "@approvalcomment@". Bitte nach Erledigung im Workflow vermerken.</p>
+        {add-comment}
+    {trigger}
+    {trigger:statechanged|state=Prüfung Pressestelle}
+        {send-email:user=intern_freigabepm|subject=Neue PM zur Freigabe Pressestelle: @pagetitle@}
+        Hier finden Sie die neue PM @pagetitle@: @page@. Bitte beachten Sie ggf. den Freigabekommentar: "@approvalcomment@"
+        {send-email}
+    {trigger}
+    {trigger:pageapproved|approval=Prüfung MdL}
+        {send-email:user=intern_freigabepm|subject=Neue PM von @MdL@ freigegeben: @pagetitle@}
+        @MdL@ hat eine neue PM freigegeben @pagetitle@: @page@. Bitte beachten Sie ggf. den Freigabekommentar: "@approvalcomment@".
+        {send-email}
+    {trigger}
+    {trigger:statechanged|state=Veröffentlicht}
+        {send-email:user=@creator@,intern_pm_verteiler|subject=Neue PM freigeben: @pagetitle@}
+        Hier finden Sie die neue PM @pagetitle@: @page@. Bitte beachten Sie ggf. den Freigabekommentar: "@approvalcomment@".
+        {send-email}
+    {trigger}
+    {trigger:pagerejected|approval=Freigabe Pressestelle|partial=true}
+        {send-email:user=@creator@,@Bearbeiter@|subject=ÜBERARBEITEN: PM @pagetitle@}
+        Die Pressestelle hat PM @pagetitle@ abgelehnt. Bitte beachten Sie ggf. den Ablehnnungskommentar: "@approvalcomment@". Überarbeiten Sie ggf. hier: @page@. Details zum Workflow können hier eingesehen werden: @pageactivity@
+        {send-email}
+    {trigger}
+    {trigger:pagerejected|approval=Freigabe MdL|partial=true}
+        {send-email:user=@creator@,@Bearbeiter@|subject=ÜBERARBEITEN: PM @pagetitle@}
+        Der/die zuständige/n MdL hat PM @pagetitle@ abgelehnt. Bitte beachten Sie ggf. den Ablehnnungskommentar: "@approvalcomment@". Überarbeiten Sie ggf. hier: @page@. Details zum Workflow können hier  eingesehen werden: @pageactivity@
+        {send-email}
+    {trigger}
+    {trigger:pagerejected|approval=Veröffentlicht|partial=true}
+        {send-email:user=@creator@,@Bearbeiter@|subject=ÜBERARBEITEN: PM @pagetitle@}
+        Die Pressestelle hat den Versand von PM @pagetitle@ abgelehnt. Bitte beachten Sie ggf. den Ablehnnungskommentar: "@approvalcomment@". Überarbeiten Sie ggf. hier: @page@. Details zum Workflow können hier eingesehen werden: @pageactivity@
+        {send-email}
+    {trigger}
+{workflow}
